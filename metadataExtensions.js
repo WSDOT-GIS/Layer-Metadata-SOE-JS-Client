@@ -1,5 +1,5 @@
+/*globals define */
 /*jslint white:true */
-/*globals dojo, esri */
 
 // Copyright ©2012 Washington State Department of Transportation (WSDOT).  Released under the MIT license (http://opensource.org/licenses/MIT).
 
@@ -8,7 +8,17 @@
  * @author Jeff Jacobson
  */
 
-(function () {
+//dojo.require("esri.layers.FeatureLayer");
+
+define([
+	"dojo/_base/lang",
+	"dojo/request/script",
+	"dojo/ready",
+	"esri/layers/layer",
+	"esri/layers/DynamicMapServiceLayer",
+	"esri/layers/ArcGISTiledMapServiceLayer",
+	"esri/layers/FeatureLayer"
+], function (lang, script, ready, Layer, DynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer) {
 	"use strict";
 
 	var layerUrlRe = /([\w\d\/\:%\.]+\/MapServer)(?:\/(\d*))?\/?$/i; // Match results: [full url, map server url, layer id]
@@ -20,12 +30,16 @@
 	 */
 	function getMapServerUrl(layer) {
 		var url, match, output;
-		if (typeof (layer) === "string") {
-			url = layer;
-		} else if (typeof (layer) !== "undefined" && layer !== null && typeof (layer.url) === "string") {
-			url = layer.url;
+		if (layer) {
+			if (typeof (layer) === "string") {
+				url = layer;
+			} else if (typeof (layer.url) === "string") {
+				url = layer.url;
+			} else {
+				throw new TypeError("The layer parameter must be either a string or a Layer.");
+			}
 		} else {
-			throw new Error("The layer parameter must be either a string or an esri.layers.Layer.");
+			throw new TypeError("The layer parameter must be either a string or an esri.layers.Layer.");
 		}
 
 		match = url.match(layerUrlRe);
@@ -44,8 +58,8 @@
 			throw new Error("Invalid layer URL format.");
 		}
 	}
-	
-	
+
+
 	/**
 	 * Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE root page. 
 	 * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
@@ -53,11 +67,11 @@
 	 */
 	function getMetadataSoeRootUrl(layer) {
 		var output, url = getMapServerUrl(layer); // This will throw an Error if it fails.
-		output = url.mapServerUrl +  "/exts/LayerMetadata";
+		output = url.mapServerUrl + "/exts/LayerMetadata";
 		return output;
 	}
-	
-	
+
+
 
 	/**
 	 * Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE for a list of valid layer IDs. 
@@ -66,10 +80,10 @@
 	 */
 	function getValidLayersUrl(layer) {
 		var url = getMapServerUrl(layer); // This will throw an Error if it fails.
-		return url.mapServerUrl +  "/exts/LayerMetadata/validLayers";
+		return url.mapServerUrl + "/exts/LayerMetadata/validLayers";
 	}
-	
-	
+
+
 
 	/**
 	 * Returns the Layer Metadata SOE URL to retrieve the metadata for a map service feature layer.
@@ -93,8 +107,8 @@
 
 		return output;
 	}
-	
-	
+
+
 
 	/**
 	 * Calls the SOE to get the list of layer IDs that correspond to feature layers. 
@@ -103,87 +117,71 @@
 	 * @param {Function} Event handler function that is called when the query fails.  Parameter "error" is an Error.
 	 */
 	function getIdsOfLayersWithMetadata(layer, successHandler, failHandler) {
-		var jsonpArgs;
 		try {
-			jsonpArgs = {
-				url: getValidLayersUrl(layer),
-				callbackParamName: "callback",
-				content: {
+			return script.get(getValidLayersUrl(layer), {
+				jsonp: "callback",
+				query: {
 					"f": "json"
-				},
-				load: function (data) {
-					if (typeof(data.error) !== "undefined" && typeof(failHandler) === "function") {
-						failHandler(data.error);
-					}
-					else if (typeof (successHandler) === "function") {
-						// In the ArcGIS 10.0 version, an array was returned.
-						// In the ArcGIS 10.1 version, an object is returned.  
-						// This object has a property called layerIds which is an array. 
-						if (!dojo.isArray(data)) {
-							data = data.layerIds;
-						}
-						successHandler(data);
-					}
-				},
-				error: function (error) {
-					if (typeof (failHandler) === "function") {
-						failHandler(error);
-					}
 				}
-			};
-			return dojo.io.script.get(jsonpArgs);
+			}).then(function (data) {
+				if (typeof (data.error) !== "undefined" && typeof (failHandler) === "function") {
+					failHandler(data.error);
+				}
+				else if (typeof (successHandler) === "function") {
+					// In the ArcGIS 10.0 version, an array was returned.
+					// In the ArcGIS 10.1 version, an object is returned.  
+					// This object has a property called layerIds which is an array. 
+					if (data instanceof Array) { //!dojo.isArray(data)) {
+						data = data.layerIds;
+					}
+					successHandler(data);
+				}
+			}, function (error) {
+				if (typeof (failHandler) === "function") {
+					failHandler(error);
+				}
+			});
 		} catch (err) {
 			if (failHandler) {
 				failHandler(err);
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	function supportsMetadata(layer, successHandler, failHandler) {
-		var jsonpArgs;
 		try {
-			jsonpArgs = {
-				url: getMetadataSoeRootUrl(layer),
-				callbackParamName: "callback",
-				content: {
+			return script.get(getMetadataSoeRootUrl(layer), {
+				jsonp: "callback",
+				query: {
 					"f": "json"
-				},
-				load: function (data) {
-					if (typeof(data.error) !== "undefined" && typeof(failHandler) === "function") {
-						failHandler(data.error);
-					}
-					else if (typeof (successHandler) === "function") {
-						successHandler(data);
-					}
-				},
-				error: function (error) {
-					if (typeof (failHandler) === "function") {
-						failHandler(error);
-					}
 				}
-			};
-			return dojo.io.script.get(jsonpArgs);
+			}).then(function (data) {
+				if (typeof (data.error) !== "undefined" && typeof (failHandler) === "function") {
+					failHandler(data.error);
+				}
+				else if (typeof (successHandler) === "function") {
+					successHandler(data);
+				}
+			}, function (error) {
+				if (typeof (failHandler) === "function") {
+					failHandler(error);
+				}
+			});
 		} catch (err) {
 			if (failHandler) {
 				failHandler(err);
 			}
 		}
 	}
-	
+
 
 	function addExtensions() {
-		var i, l, ctor, f, f2, f3, multiLayerClasses = [esri.layers.DynamicMapServiceLayer, esri.layers.ArcGISTiledMapServiceLayer];
+		var i, l, ctor, f, f2, f3, multiLayerClasses = [DynamicMapServiceLayer, ArcGISTiledMapServiceLayer];
 
-		esri.layers.getMapServerUrl = getMapServerUrl;
-		esri.layers.getMetadataSoeRootUrl = getMetadataSoeRootUrl;
-		esri.layers.getLayersWithMetadataUrl = getValidLayersUrl;
-		esri.layers.getMetadataUrl = getMetadataUrl;
-		esri.layers.getIdsOfLayersWithMetadata = getIdsOfLayersWithMetadata;
-		esri.layers.supportsMetadata = supportsMetadata;
-		
-		dojo.extend(esri.layers.Layer, {
+
+		lang.extend(Layer, {
 			getIdsOfLayersWithMetadata: function (successHandler, failHandler) {
 				return getIdsOfLayersWithMetadata(this, successHandler, failHandler);
 			}
@@ -195,33 +193,38 @@
 		f2 = function () {
 			return getMetadataSoeRootUrl(this);
 		};
-		
+
 		f3 = function (successHandler, failHandler) {
 			return supportsMetadata(this, successHandler, failHandler);
 		};
 
 		for (i = 0, l = multiLayerClasses.length; i < l; i += 1) {
 			ctor = multiLayerClasses[i];
-			dojo.extend(ctor, {
+			lang.extend(ctor, {
 				getMetadataUrl: f,
 				getMetadataSoeRootUrl: f2,
 				supportsMetadata: f3
 			});
 		}
-		
+
 		f = function (format) {
 			return getMetadataUrl(this, null, format);
 		};
-		
-		dojo.extend(esri.layers.FeatureLayer, {
+
+		lang.extend(FeatureLayer, {
 			getMetadataUrl: f
 		});
 	}
 
-	dojo.require("dojo.io.script");
-	dojo.require("esri.layers.agsdynamic");
-	dojo.require("esri.layers.agstiled");
-	dojo.require("esri.layers.FeatureLayer");
 
-	dojo.addOnLoad(addExtensions);
-}());
+	ready(addExtensions);
+
+	return {
+		getMapServerUrl: getMapServerUrl,
+		getMetadataSoeRootUrl: getMetadataSoeRootUrl,
+		getLayersWithMetadataUrl: getValidLayersUrl,
+		getMetadataUrl: getMetadataUrl,
+		getIdsOfLayersWithMetadata: getIdsOfLayersWithMetadata,
+		supportsMetadata: supportsMetadata
+	};
+});
