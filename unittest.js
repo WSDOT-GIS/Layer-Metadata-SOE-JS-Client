@@ -16,9 +16,8 @@ require([
 	"use strict";
 	
 	var mapServiceUrl, featureLayerId, featureLayerUrl;
-	mapServiceUrl = "http://localhost/arcgis/rest/services/ELC/MapServer";
-	featureLayerId = 0;
-	featureLayerUrl = [mapServiceUrl, featureLayerId].join("/"); 
+
+
 	
 	function performTests() {
 		var expected; 
@@ -166,6 +165,52 @@ require([
 
 	}
 
-	performTests();
+	// Get the map service URL form the query string "url" parameter.
+	(function (qs) {
+		var match;
+		if (qs) {
+			match = qs.match(/url=([^&?]+)/i);
+			if (match && match.length > 1) {
+				mapServiceUrl = match[1];
+				mapServiceUrl = decodeURIComponent(mapServiceUrl)
+			}
+		}
+	}(window.location.search));
+
+	if (mapServiceUrl) {
+
+		featureLayerId = 0;
+		featureLayerUrl = [mapServiceUrl, featureLayerId].join("/");
+
+		performTests();
+	} else {
+		// Add a form where the user can specify a URL.
+		(function () {
+			var frag, form, label, box, button;
+			frag = document.createDocumentFragment();
+			form = document.createElement("form");
+			form.action = "";
+			frag.appendChild(form);
+
+			label = document.createElement("label");
+			label.textContent = "URL";
+			form.appendChild(label);
+
+			box = document.createElement("input");
+			box.id = "urlBox";
+			box.type = "url";
+			box.name = "url";
+			box.placeholder = "Enter the URL of a map service that has the Layer Metadata capability."
+			label.htmlFor = box.id;
+			form.appendChild(box);
+
+			button = document.createElement("button");
+			button.textContent = "Submit";
+			button.type = "submit";
+			form.appendChild(button);
+
+			document.body.appendChild(frag);
+		}());
+	}
 	
 });	
