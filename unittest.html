@@ -5,6 +5,35 @@
 		<meta charset="utf-8" />
 		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame.  Remove this if you use the .htaccess -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<script>
+			(function () {
+				"use strict";
+				var url, re = /\/[^\/]+$/;
+
+
+				// Get the URL of this page without the query string.
+				url = location.href.match(/^[^?]+/)[0];
+
+				// Remove the document filename if present.
+				if (re.test(url)) {
+					url = url.replace(re, "/");
+				}
+
+				var dojoConfig = {
+					async: true,
+					packages: [
+						{
+							name: "metadata",
+							location: url,
+							main: "metadataExtensions"
+						}
+					]
+				};
+
+				window.dojoConfig = dojoConfig;
+			}());
+
+		</script>
 		<script type="text/javascript" src="http://js.arcgis.com/3.6compact/init.js"></script>
 		<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.12.0.css" type="text/css" media="screen" />
 		<script type="text/javascript" src="http://code.jquery.com/qunit/qunit-1.12.0.js"></script>

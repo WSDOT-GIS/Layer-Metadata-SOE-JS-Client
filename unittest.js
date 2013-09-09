@@ -10,7 +10,7 @@ require([
 	"esri/layers/ArcGISDynamicMapServiceLayer",
 	"esri/layers/ArcGISTiledMapServiceLayer",
 	"esri/layers/FeatureLayer",
-	"./metadataExtensions",
+	"metadata",
 	"dojo/domReady!"
 ], function (xhr, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, metadata) {
 	"use strict";
