@@ -79,14 +79,19 @@ require([
 			
 			var layer;
 			layer = new ArcGISDynamicMapServiceLayer(mapServiceUrl);
-			layer.getIdsOfLayersWithMetadata(function (data) {
-				ok(data && data instanceof Array, "Result is an array.");
-				ok(arrayContainsOnlyNumbers(data), "Array contains only numbers.");
+			try {
+				layer.getIdsOfLayersWithMetadata(function (data) {
+					ok(data && data instanceof Array, "Result is an array.");
+					ok(arrayContainsOnlyNumbers(data), "Array contains only numbers.");
+					start();
+				}, function (error) {
+					ok(false, "Call to Layer Metadata SOE failed.  Make sure that  " + mapServiceUrl + " has the \"Layer Metadata\" capability turned on.\n" + error);
+					start();
+				});
+			} catch (e) {
+				ok(false, ["An exception ocurred", e].join(""));
 				start();
-			}, function (error) {
-				ok(false, "Call to Layer Metadata SOE failed.  Make sure that  " + mapServiceUrl + " has the \"Layer Metadata\" capability turned on.\n" + error);
-				start();
-			});
+			}
 		});
 		
 		module("Metadata support check");
@@ -118,7 +123,14 @@ require([
 		
 		asyncTest("Get metadata as XML", function () {
 			// Use the "expected" URL to query for metadata documents.
-			xhr(expected, function (xmlDocument, ioArgs) {
+			xhr(expected, {
+				content: {
+					f: "xml"
+				},
+				headers: {
+					"X-Requested-With": null
+				}
+			}).then(function (xmlDocument, ioArgs) {
 				console.debug({"Metadata XML": xmlDocument});
 				ok(xmlDocument, "Metadata XML document was retrieved.  See console for more details.");
 				start();

@@ -12,13 +12,13 @@
 
 define([
 	"dojo/_base/lang",
-	"dojo/request/script",
+	"esri/request",
 	"dojo/ready",
 	"esri/layers/layer",
 	"esri/layers/DynamicMapServiceLayer",
 	"esri/layers/ArcGISTiledMapServiceLayer",
 	"esri/layers/FeatureLayer"
-], function (lang, script, ready, Layer, DynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer) {
+], function (lang, esriRequest, ready, Layer, DynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer) {
 	"use strict";
 
 	var layerUrlRe = /([\w\d\/\:%\.]+\/MapServer)(?:\/(\d*))?\/?$/i; // Match results: [full url, map server url, layer id]
@@ -89,9 +89,8 @@ define([
 	 * Returns the Layer Metadata SOE URL to retrieve the metadata for a map service feature layer.
 	 * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
 	 * @param {Number} [sublayerId] If the URL provided via the layer parameter does not contain a layer ID, this parameter must be used to supply one.  If the URL already has a layer ID, this parameter will be ignored.
-	 * @param {String} [format] The format parameter that will be appended as a query string.  If omitted, no query string will be appended to the URL.
 	 */
-	function getMetadataUrl(layer, sublayerId, format) {
+	function getMetadataUrl(layer, sublayerId) {
 		var urlInfo = getMapServerUrl(layer), output;
 		if (urlInfo.layerId !== null) {
 			sublayerId = urlInfo.layerId;
@@ -100,10 +99,6 @@ define([
 			throw new Error("Invalid layer id.  Layer id must be an integer.");
 		}
 		output = urlInfo.mapServerUrl + "/exts/LayerMetadata/metadata/" + String(sublayerId);
-
-		if (format) {
-			output += "?f=" + format;
-		}
 
 		return output;
 	}
@@ -118,11 +113,14 @@ define([
 	 */
 	function getIdsOfLayersWithMetadata(layer, successHandler, failHandler) {
 		try {
-			return script.get(getValidLayersUrl(layer), {
-				jsonp: "callback",
-				query: {
+			return esriRequest({
+				url: getValidLayersUrl(layer),
+				callbackParamName: "callback",
+				content: {
 					"f": "json"
 				}
+			}, {
+				useProxy: false
 			}).then(function (data) {
 				if (typeof (data.error) !== "undefined" && typeof (failHandler) === "function") {
 					failHandler(data.error);
@@ -131,7 +129,7 @@ define([
 					// In the ArcGIS 10.0 version, an array was returned.
 					// In the ArcGIS 10.1 version, an object is returned.  
 					// This object has a property called layerIds which is an array. 
-					if (data instanceof Array) { //!dojo.isArray(data)) {
+					if (!(data instanceof Array)) {
 						data = data.layerIds;
 					}
 					successHandler(data);
@@ -152,11 +150,14 @@ define([
 
 	function supportsMetadata(layer, successHandler, failHandler) {
 		try {
-			return script.get(getMetadataSoeRootUrl(layer), {
-				jsonp: "callback",
-				query: {
+			return esriRequest({
+				url: getMetadataSoeRootUrl(layer),
+				callbackParamName: "callback",
+				content: {
 					"f": "json"
 				}
+			}, {
+				useProxy: false
 			}).then(function (data) {
 				if (typeof (data.error) !== "undefined" && typeof (failHandler) === "function") {
 					failHandler(data.error);
