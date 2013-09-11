@@ -13,11 +13,9 @@ This JavaScript file extends the layer classes to add methods for calling the La
 
 QUnit unit test for metadataExtensions.
 
+## Running the unit test ##
 
-#### Unit Test Setup #####
-
-1. Copy `unittest.js.sample` to `unittest.js`.  (`unittest.js` is in the `.gitignore` file, so it will not be pushed to the repository.)
-2. Modify the url variable in `unittest.js` so that it points to a map service that has the _Layer Metadata_ capability enabled.
+A URL to a map service should be provided via the `url` query string parameter. If this parameter is not provided a form will be shown on the page instead of the tests where you can enter this URL.
 
 ## License ##
 This program is licensed under [The MIT license]
