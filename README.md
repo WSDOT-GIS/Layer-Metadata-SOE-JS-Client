@@ -17,9 +17,5 @@ QUnit unit test for metadataExtensions.
 
 A URL to a map service should be provided via the `url` query string parameter. If this parameter is not provided a form will be shown on the page instead of the tests where you can enter this URL.
 
-## License ##
-This program is licensed under [The MIT license]
-
 [ArcGIS API for JavaScript]:http://js.arcgis.com
 [Layer Metadata SOE]:https://github.com/WSDOT-GIS/LayerMetadataSoe
-[The MIT license]:http://www.opensource.org/licenses/MIT
