@@ -1,14 +1,10 @@
 /*globals define */
 /*jslint white:true */
 
-// Copyright ©2012 Washington State Department of Transportation (WSDOT).  Released under the MIT license (http://opensource.org/licenses/MIT).
-
 /**
  * This JS file extends the esri.layer.Layers class to provide functions that work with WSDOT's Layer Metadata Server Object Extension (SOE).
  * @author Jeff Jacobson
  */
-
-//dojo.require("esri.layers.FeatureLayer");
 
 define([
 	"dojo/_base/lang",
@@ -25,7 +21,7 @@ define([
 
 	/**
 	 * Examines a layer (or a layer URL) and returns the map service url and layer id parts as properties in the returned object.
-	 * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object. 
+	 * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
 	 * @returns {Object} An object with the properties mapServerUrl and layerId.  mapServerUrl is the url to the map server (without any layerIDs).  layerId is the layer ID portion of the URL.  If the URL did not contain a layerID, this property will have a value of null.
 	 */
 	function getMapServerUrl(layer) {
@@ -61,9 +57,9 @@ define([
 
 
 	/**
-	 * Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE root page. 
+	 * Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE root page.
 	 * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
-	 * @returns {String} The URL to the SOE root. 
+	 * @returns {String} The URL to the SOE root.
 	 */
 	function getMetadataSoeRootUrl(layer) {
 		var output, url = getMapServerUrl(layer); // This will throw an Error if it fails.
@@ -74,9 +70,9 @@ define([
 
 
 	/**
-	 * Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE for a list of valid layer IDs. 
+	 * Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE for a list of valid layer IDs.
 	 * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
-	 * @returns {String} The URL to a query for a list of valid layers. 
+	 * @returns {String} The URL to a query for a list of valid layers.
 	 */
 	function getValidLayersUrl(layer) {
 		var url = getMapServerUrl(layer); // This will throw an Error if it fails.
@@ -106,7 +102,7 @@ define([
 
 
 	/**
-	 * Calls the SOE to get the list of layer IDs that correspond to feature layers. 
+	 * Calls the SOE to get the list of layer IDs that correspond to feature layers.
 	 * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
 	 * @param {Function} Event handler function that is called when the query is successful.  Parameter "data" is an array of integers.
 	 * @param {Function} Event handler function that is called when the query fails.  Parameter "error" is an Error.
@@ -127,8 +123,8 @@ define([
 				}
 				else if (typeof (successHandler) === "function") {
 					// In the ArcGIS 10.0 version, an array was returned.
-					// In the ArcGIS 10.1 version, an object is returned.  
-					// This object has a property called layerIds which is an array. 
+					// In the ArcGIS 10.1 version, an object is returned.
+					// This object has a property called layerIds which is an array.
 					if (!(data instanceof Array)) {
 						data = data.layerIds;
 					}
