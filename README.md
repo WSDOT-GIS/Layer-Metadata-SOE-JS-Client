@@ -3,6 +3,16 @@ Layer Metadata Server Object Extension JavaScript client
 
 This project contains extensions to the [ArcGIS API for JavaScript] layer classes that allow them to call the [Layer Metadata SOE].
 
+metadataSoeUtils
+----------------
+
+### Issue: Jasmine tests fails due to Promise not being defined in Visual Studio's Task Runner Explorer ###
+
+Visual Studio is running and old version of Node.js. If you have a newer version installed you can make Visual Studio use the newer one by following these steps:
+
+1. Go to Tools | Options | Projects and Solutions | External Web Tools.
+2. Move `$(PATH)` above `$(DevEnvDir)\Extensions\Microsoft\Web Tools\External`
+
 ## Files ##
 
 ### metadataExtensions.js ####

@@ -13,6 +13,11 @@
     }
 }(this, function (fetchPolyfill) {
 
+    /**
+     * Metadata SOE Utility module
+     * @module metadataSoeUtils
+     */
+
     if (fetchPolyfill) {
         fetch = fetchPolyfill;
     }
