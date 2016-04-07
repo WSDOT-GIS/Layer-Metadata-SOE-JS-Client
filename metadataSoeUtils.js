@@ -6,6 +6,8 @@
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
         // like Node.
+
+        // Node doesn't support fetch natively, so this capability must be loaded.
         module.exports = factory(require("node-fetch"));
     } else {
         // Browser globals (root is window)
@@ -13,11 +15,16 @@
     }
 }(this, function (fetchPolyfill) {
 
+    var validLayersUrl = "exts/LayerMetadata/validLayers?f=json";
+    var layerSourcesUrl = "exts/LayerMetadata/layerSources?f=json";
+
     /**
      * Metadata SOE Utility module
      * @module metadataSoeUtils
      */
 
+    // Enable fetch in node.
+    // Browser polyfills will be handled with browser script tags.
     if (fetchPolyfill) {
         fetch = fetchPolyfill;
     }
@@ -39,6 +46,10 @@
         return output;
     }
 
+    // Once a service is queried for support, store it here so subsequent queries
+    // for same service no longer require HTTP request.
+    var metadataSupportInfo = {};
+
     var exports = {
         /**
          * Tests a map service to see if it supports the Layer Metadata SOE.
@@ -55,15 +66,17 @@
             }
 
             return new Promise(function (resolve, reject) {
-                fetch(url + "?f=json").then(function (response) {
-                    return response.json();
-                }).then(function (serviceInfo) {
-                    var supportedExtensions = serviceInfo && serviceInfo.supportedExtensions ? serviceInfo.supportedExtensions.split(/[,\s]+/) : null;
-                    if (Array.isArray(supportedExtensions)) {
-                        resolve(arrayContainsString(supportedExtensions, "LayerMetadata"));
-                    }
-                    resolve(false);
-                });
+                if (metadataSupportInfo.hasOwnProperty(url)) {
+                    resolve(metadataSupportInfo[url]);
+                } else {
+                    fetch(url + "?f=json").then(function (response) {
+                        return response.json();
+                    }).then(function (serviceInfo) {
+                        var supportedExtensions = serviceInfo && serviceInfo.supportedExtensions ? serviceInfo.supportedExtensions.split(/[,\s]+/) : null;
+                        var isSupported = Array.isArray(supportedExtensions) && arrayContainsString(supportedExtensions, "LayerMetadata");
+                        resolve(isSupported);
+                    });
+                }
             });
         }
     };
