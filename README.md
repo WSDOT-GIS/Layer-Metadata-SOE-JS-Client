@@ -39,50 +39,22 @@ Map service URL
 <a name="module_MetadataClient--MetadataClient..supportsMetadata"></a>
 
 #### MetadataClient~supportsMetadata : <code>Promise.&lt;Boolean&gt;</code>
-Tests a map service to see if it supports the Layer Metadata SOE.
-First call submits an HTTP request. Subsequent calls do not.
-Returns a promise that, when resolved, returns a boolean value
-indicating if the service supports the layer metadata capability.
+Tests a map service to see if it supports the Layer Metadata SOE.First call submits an HTTP request. Subsequent calls do not.Returns a promise that, when resolved, returns a boolean valueindicating if the service supports the layer metadata capability.
 
 **Kind**: inner property of <code>[MetadataClient](#exp_module_MetadataClient--MetadataClient)</code>  
 **Example**  
 ```js
-var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");
-client.supportsMetadata.then(function (isSupported) {
-    expect(isSupported).toBe(true);
-    // Test subsequent request, which is stored in variable instead of additional HTTP request.
-    client.supportsMetadata.then(function (isSupported) {
-         console.log("layer does " + isSupported ? "" : "not " + "support metadata");
-    });
-});
+var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");client.supportsMetadata.then(function (isSupported) {     console.log("layer does " + isSupported ? "" : "not " + "support metadata");});
 ```
 <a name="module_MetadataClient--MetadataClient..layerSources"></a>
 
 #### MetadataClient~layerSources : <code>Promise.&lt;Object.&lt;string, Array.&lt;number&gt;&gt;&gt;</code>
-Returns list of layers that have metadata associated with them,
-grouped by common data source.
+Returns list of layers that have metadata associated with them,grouped by common data source.
 
 **Kind**: inner property of <code>[MetadataClient](#exp_module_MetadataClient--MetadataClient)</code>  
 **Example**  
 ```js
-// Output:
-// {
-//  "GeodataExternalReplica.DBO.sr24kIncrease": [
-//   0,
-//   1,
-//   4
-//  ],
-//  "GeodataExternalReplica.DBO.sr24kDecrease": [
-//   2
-//  ],
-//  "GeodataExternalReplica.DBO.sr24kRamp": [
-//   3
-//  ],
-//  "GeodataExternalReplica.DBO.LAPR_Lines": [
-//   5,
-//   6
-//  ]
-// }
+// Output:// {//  "GeodataExternalReplica.DBO.sr24kIncrease": [//   0,//   1,//   4//  ],//  "GeodataExternalReplica.DBO.sr24kDecrease": [//   2//  ],//  "GeodataExternalReplica.DBO.sr24kRamp": [//   3//  ],//  "GeodataExternalReplica.DBO.LAPR_Lines": [//   5,//   6//  ]// }
 ```
 
 ## Issue: Jasmine tests fails due to Promise not being defined in Visual Studio's Task Runner Explorer ##

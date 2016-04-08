@@ -18,6 +18,7 @@
   ],
   "author": "WSDOT-GIS",
   "license": "Unlicense",
+  "private": true,
   "bugs": {
     "url": "https://github.com/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/issues"
   },

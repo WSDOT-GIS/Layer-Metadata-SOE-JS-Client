@@ -63,6 +63,8 @@
         var _supportsMetadata;
         var _layerSources;
 
+        var self = this;
+
         Object.defineProperties(this, {
             /**
              * @member {string} - Map service URL
@@ -78,14 +80,8 @@
              * @example
              * var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");
              * client.supportsMetadata.then(function (isSupported) {
-             *     expect(isSupported).toBe(true);
-             *     // Test subsequent request, which is stored in variable instead of additional HTTP request.
-             *     client.supportsMetadata.then(function (isSupported) {
-             *          console.log("layer does " + isSupported ? "" : "not " + "support metadata");
-             *     });
+             *      console.log("layer does " + isSupported ? "" : "not " + "support metadata");
              * });
-             *
-
              */
             supportsMetadata: {
                 get: function () {
@@ -130,14 +126,24 @@
             layerSources: {
                 get: function () {
                     return new Promise(function (resolve, reject) {
+                        var requestUrl = [url, layerSourcesUrl].join("/");
                         if (_layerSources) {
                             resolve(_layerSources);
                         } else {
-                            fetch([url, layerSourcesUrl].join("/")).then(function (response) {
-                                return response.json();
-                            }).then(function (layerSources) {
-                                _layerSources = layerSources;
-                                resolve(_layerSources);
+                            self.supportsMetadata.then(function (supported) {
+                                if (!supported) {
+                                    reject(new Error(self.url + " does not support LayerMetadata capability"));
+                                } else {
+                                    console.debug(requestUrl);
+                                    fetch(requestUrl).then(function (response) {
+                                        return response.json();
+                                    }).then(function (layerSources) {
+                                        _layerSources = layerSources;
+                                        resolve(_layerSources);
+                                    }, function (error) {
+                                        reject(error);
+                                    });
+                                }
                             });
                         }
                     });
