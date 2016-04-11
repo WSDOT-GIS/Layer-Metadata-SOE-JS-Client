@@ -3,6 +3,16 @@ Layer Metadata Server Object Extension JavaScript client
 
 This project contains extensions to the [ArcGIS API for JavaScript] layer classes that allow them to call the [Layer Metadata SOE].
 
+## Modules
+
+<dl>
+<dt><a href="#module_MetadataClient">MetadataClient</a></dt>
+<dd></dd>
+<dt><del><a href="#module_metadataExtension">metadataExtension</a></del></dt>
+<dd><p>Extends the layer classes to add methods for calling the Layer Metadata SOE.</p>
+</dd>
+</dl>
+
 <a name="module_MetadataClient"></a>
 
 ## MetadataClient
@@ -69,23 +79,103 @@ client.layerSources.then(function (layerSources) {
 });
 // Output:
 // {
-//  "GeodataExternalReplica.DBO.sr24kIncrease": [
-//   0,
-//   1,
-//   4
-//  ],
-//  "GeodataExternalReplica.DBO.sr24kDecrease": [
-//   2
-//  ],
-//  "GeodataExternalReplica.DBO.sr24kRamp": [
-//   3
-//  ],
-//  "GeodataExternalReplica.DBO.LAPR_Lines": [
-//   5,
-//   6
-//  ]
+//  "GeodataExternalReplica.DBO.sr24kIncrease": [ 0, 1, 4 ],
+//  "GeodataExternalReplica.DBO.sr24kDecrease": [ 2 ],
+//  "GeodataExternalReplica.DBO.sr24kRamp": [ 3 ],
+//  "GeodataExternalReplica.DBO.LAPR_Lines": [ 5, 6 ]
 // }
 ```
+<a name="module_metadataExtension"></a>
+
+## ~~metadataExtension~~
+***Deprecated***
+
+Extends the layer classes to add methods for calling the Layer Metadata SOE.
+
+
+* ~~[metadataExtension](#module_metadataExtension)~~
+    * [.getMapServerUrl](#module_metadataExtension.getMapServerUrl) ⇒ <code>Object</code>
+    * [.getMetadataSoeRootUrl](#module_metadataExtension.getMetadataSoeRootUrl) ⇒ <code>String</code>
+    * [.getLayersWithMetadataUrl](#module_metadataExtension.getLayersWithMetadataUrl) ⇒ <code>String</code>
+    * [.getMetadataUrl](#module_metadataExtension.getMetadataUrl)
+    * [.getIdsOfLayersWithMetadata](#module_metadataExtension.getIdsOfLayersWithMetadata)
+    * [.supportsMetadata](#module_metadataExtension.supportsMetadata) ⇒ <code>Promise.&lt;Boolean&gt;</code>
+
+<a name="module_metadataExtension.getMapServerUrl"></a>
+
+### metadataExtension.getMapServerUrl ⇒ <code>Object</code>
+Examines a layer (or a layer URL) and returns the map service url and layer id parts as properties in the returned object.
+
+**Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
+**Returns**: <code>Object</code> - An object with the properties mapServerUrl and layerId.  mapServerUrl is the url to the map server (without any layerIDs).  layerId is the layer ID portion of the URL.  If the URL did not contain a layerID, this property will have a value of null.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| layer | <code>String</code> &#124; <code>esri.layers.Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+
+<a name="module_metadataExtension.getMetadataSoeRootUrl"></a>
+
+### metadataExtension.getMetadataSoeRootUrl ⇒ <code>String</code>
+Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE root page.
+
+**Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
+**Returns**: <code>String</code> - The URL to the SOE root.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| layer | <code>String</code> &#124; <code>esri.layers.Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+
+<a name="module_metadataExtension.getLayersWithMetadataUrl"></a>
+
+### metadataExtension.getLayersWithMetadataUrl ⇒ <code>String</code>
+Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE for a list of valid layer IDs.
+
+**Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
+**Returns**: <code>String</code> - The URL to a query for a list of valid layers.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| layer | <code>String</code> &#124; <code>esri.layers.Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+
+<a name="module_metadataExtension.getMetadataUrl"></a>
+
+### metadataExtension.getMetadataUrl
+Returns the Layer Metadata SOE URL to retrieve the metadata for a map service feature layer.
+
+**Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| layer | <code>String</code> &#124; <code>esri.layers.Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+| [sublayerId] | <code>Number</code> | If the URL provided via the layer parameter does not contain a layer ID, this parameter must be used to supply one.  If the URL already has a layer ID, this parameter will be ignored. |
+
+<a name="module_metadataExtension.getIdsOfLayersWithMetadata"></a>
+
+### metadataExtension.getIdsOfLayersWithMetadata
+Calls the SOE to get the list of layer IDs that correspond to feature layers.
+
+**Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| layer | <code>String</code> &#124; <code>esri.layers.Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+| Event | <code>function</code> | handler function that is called when the query is successful.  Parameter "data" is an array of integers. |
+| Event | <code>function</code> | handler function that is called when the query fails.  Parameter "error" is an Error. |
+
+<a name="module_metadataExtension.supportsMetadata"></a>
+
+### metadataExtension.supportsMetadata ⇒ <code>Promise.&lt;Boolean&gt;</code>
+Tests to see if a layer supports metadata.
+
+**Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
+**Returns**: <code>Promise.&lt;Boolean&gt;</code> - - Returns a promise. When resolved, a boolean value indicates if the layer supports metadata.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| layer | <code>esri/layers/Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+| successHandler | <code>function</code> | Function that is called when metadata is supported. |
+| failHandler | <code>function</code> | Function that is called when metadata is not supported. |
+
 
 ## Issue: Jasmine tests fails due to Promise not being defined in Visual Studio's Task Runner Explorer ##
 

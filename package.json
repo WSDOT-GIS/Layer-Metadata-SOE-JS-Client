@@ -6,7 +6,7 @@
   "main": "metadataExtensions.js",
   "scripts": {
     "test": "jasmine",
-    "docs": "jsdoc2md MetadataClient.js --template README.hbs > README.md"
+    "docs": "jsdoc2md MetadataClient.js metadataExtensions.js --template README.hbs > README.md"
   },
   "repository": {
     "type": "git",

@@ -112,21 +112,10 @@
              * });
              * // Output:
              * // {
-             * //  "GeodataExternalReplica.DBO.sr24kIncrease": [
-             * //   0,
-             * //   1,
-             * //   4
-             * //  ],
-             * //  "GeodataExternalReplica.DBO.sr24kDecrease": [
-             * //   2
-             * //  ],
-             * //  "GeodataExternalReplica.DBO.sr24kRamp": [
-             * //   3
-             * //  ],
-             * //  "GeodataExternalReplica.DBO.LAPR_Lines": [
-             * //   5,
-             * //   6
-             * //  ]
+             * //  "GeodataExternalReplica.DBO.sr24kIncrease": [ 0, 1, 4 ],
+             * //  "GeodataExternalReplica.DBO.sr24kDecrease": [ 2 ],
+             * //  "GeodataExternalReplica.DBO.sr24kRamp": [ 3 ],
+             * //  "GeodataExternalReplica.DBO.LAPR_Lines": [ 5, 6 ]
              * // }
              */
             layerSources: {
