@@ -94,16 +94,18 @@ Extends the layer classes to add methods for calling the Layer Metadata SOE.
 
 
 * ~~[metadataExtension](#module_metadataExtension)~~
-    * [.getMapServerUrl](#module_metadataExtension.getMapServerUrl) ⇒ <code>Object</code>
-    * [.getMetadataSoeRootUrl](#module_metadataExtension.getMetadataSoeRootUrl) ⇒ <code>String</code>
-    * [.getLayersWithMetadataUrl](#module_metadataExtension.getLayersWithMetadataUrl) ⇒ <code>String</code>
-    * [.getMetadataUrl](#module_metadataExtension.getMetadataUrl)
-    * [.getIdsOfLayersWithMetadata](#module_metadataExtension.getIdsOfLayersWithMetadata)
-    * [.supportsMetadata](#module_metadataExtension.supportsMetadata) ⇒ <code>Promise.&lt;Boolean&gt;</code>
+    * ~~[.getMapServerUrl](#module_metadataExtension.getMapServerUrl) ⇒ <code>Object</code>~~
+    * ~~[.getMetadataSoeRootUrl](#module_metadataExtension.getMetadataSoeRootUrl) ⇒ <code>string</code>~~
+    * ~~[.getLayersWithMetadataUrl](#module_metadataExtension.getLayersWithMetadataUrl) ⇒ <code>string</code>~~
+    * ~~[.getMetadataUrl](#module_metadataExtension.getMetadataUrl) ⇒ <code>Object.&lt;string, string&gt;</code>~~
+    * ~~[.getIdsOfLayersWithMetadata](#module_metadataExtension.getIdsOfLayersWithMetadata) ⇒ <code>dojo/promise/Deferred.&lt;Array.&lt;number&gt;&gt;</code>~~
+    * ~~[.supportsMetadata](#module_metadataExtension.supportsMetadata) ⇒ <code>Promise.&lt;Boolean&gt;</code>~~
 
 <a name="module_metadataExtension.getMapServerUrl"></a>
 
-### metadataExtension.getMapServerUrl ⇒ <code>Object</code>
+### ~~metadataExtension.getMapServerUrl ⇒ <code>Object</code>~~
+***Deprecated***
+
 Examines a layer (or a layer URL) and returns the map service url and layer id parts as properties in the returned object.
 
 **Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
@@ -111,60 +113,71 @@ Examines a layer (or a layer URL) and returns the map service url and layer id p
 
 | Param | Type | Description |
 | --- | --- | --- |
-| layer | <code>String</code> &#124; <code>esri.layers.Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+| layer | <code>string</code> &#124; <code>[Layer](https://developers.arcgis.com/javascript/jsapi/layer-amd.html)</code> | Either a map service or map service layer URL, or an external:Layer object. |
 
 <a name="module_metadataExtension.getMetadataSoeRootUrl"></a>
 
-### metadataExtension.getMetadataSoeRootUrl ⇒ <code>String</code>
-Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE root page.
+### ~~metadataExtension.getMetadataSoeRootUrl ⇒ <code>string</code>~~
+***Deprecated***
+
+Given an external:Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE root page.
 
 **Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
-**Returns**: <code>String</code> - The URL to the SOE root.  
+**Returns**: <code>string</code> - The URL to the SOE root.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| layer | <code>String</code> &#124; <code>esri.layers.Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+| layer | <code>string</code> &#124; <code>[Layer](https://developers.arcgis.com/javascript/jsapi/layer-amd.html)</code> | Either a map service or map service layer URL, or an external:Layer object. |
 
 <a name="module_metadataExtension.getLayersWithMetadataUrl"></a>
 
-### metadataExtension.getLayersWithMetadataUrl ⇒ <code>String</code>
-Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE for a list of valid layer IDs.
+### ~~metadataExtension.getLayersWithMetadataUrl ⇒ <code>string</code>~~
+***Deprecated***
+
+Given an external:Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE for a list of valid layer IDs.
 
 **Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
-**Returns**: <code>String</code> - The URL to a query for a list of valid layers.  
+**Returns**: <code>string</code> - The URL to a query for a list of valid layers.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| layer | <code>String</code> &#124; <code>esri.layers.Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+| layer | <code>string</code> &#124; <code>[Layer](https://developers.arcgis.com/javascript/jsapi/layer-amd.html)</code> | Either a map service or map service layer URL, or an external:Layer object. |
 
 <a name="module_metadataExtension.getMetadataUrl"></a>
 
-### metadataExtension.getMetadataUrl
+### ~~metadataExtension.getMetadataUrl ⇒ <code>Object.&lt;string, string&gt;</code>~~
+***Deprecated***
+
 Returns the Layer Metadata SOE URL to retrieve the metadata for a map service feature layer.
 
 **Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
+**Returns**: <code>Object.&lt;string, string&gt;</code> - - Returns an object with a "mapServerUrl" property.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| layer | <code>String</code> &#124; <code>esri.layers.Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+| layer | <code>string</code> &#124; <code>[Layer](https://developers.arcgis.com/javascript/jsapi/layer-amd.html)</code> | Either a map service or map service layer URL, or an external:Layer object. |
 | [sublayerId] | <code>Number</code> | If the URL provided via the layer parameter does not contain a layer ID, this parameter must be used to supply one.  If the URL already has a layer ID, this parameter will be ignored. |
 
 <a name="module_metadataExtension.getIdsOfLayersWithMetadata"></a>
 
-### metadataExtension.getIdsOfLayersWithMetadata
+### ~~metadataExtension.getIdsOfLayersWithMetadata ⇒ <code>dojo/promise/Deferred.&lt;Array.&lt;number&gt;&gt;</code>~~
+***Deprecated***
+
 Calls the SOE to get the list of layer IDs that correspond to feature layers.
 
 **Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| layer | <code>String</code> &#124; <code>esri.layers.Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+| layer | <code>string</code> &#124; <code>[Layer](https://developers.arcgis.com/javascript/jsapi/layer-amd.html)</code> | Either a map service or map service layer URL, or an external:Layer object. |
 | Event | <code>function</code> | handler function that is called when the query is successful.  Parameter "data" is an array of integers. |
 | Event | <code>function</code> | handler function that is called when the query fails.  Parameter "error" is an Error. |
 
 <a name="module_metadataExtension.supportsMetadata"></a>
 
-### metadataExtension.supportsMetadata ⇒ <code>Promise.&lt;Boolean&gt;</code>
+### ~~metadataExtension.supportsMetadata ⇒ <code>Promise.&lt;Boolean&gt;</code>~~
+***Deprecated***
+
 Tests to see if a layer supports metadata.
 
 **Kind**: static property of <code>[metadataExtension](#module_metadataExtension)</code>  
@@ -172,12 +185,13 @@ Tests to see if a layer supports metadata.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| layer | <code>esri/layers/Layer</code> | Either a map service or map service layer URL, or an esri.layers.Layer object. |
+| layer | <code>[Layer](https://developers.arcgis.com/javascript/jsapi/layer-amd.html)</code> | Either a map service or map service layer URL, or an external:Layer object. |
 | successHandler | <code>function</code> | Function that is called when metadata is supported. |
 | failHandler | <code>function</code> | Function that is called when metadata is not supported. |
 
 
-## Issue: Jasmine tests fails due to Promise not being defined in Visual Studio's Task Runner Explorer ##
+Issue: Jasmine tests fails due to Promise not being defined in Visual Studio's Task Runner Explorer
+---------------------------------------------------------------------------------------------------
 
 Visual Studio is running and old version of Node.js. If you have a newer version installed you can make Visual Studio use the newer one by following these steps:
 

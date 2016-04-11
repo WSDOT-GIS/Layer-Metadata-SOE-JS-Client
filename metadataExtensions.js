@@ -10,10 +10,10 @@ define([
     "dojo/_base/lang",
     "esri/request",
     "dojo/ready",
-    "esri/layers/layer",
-    "esri/layers/DynamicMapServiceLayer",
-    "esri/layers/ArcGISTiledMapServiceLayer",
-    "esri/layers/FeatureLayer",
+    "Layer",
+    "DynamicMapServiceLayer",
+    "ArcGISTiledMapServiceLayer",
+    "FeatureLayer",
     "./MetadataClient"
 ], function (
     lang,
@@ -40,7 +40,7 @@ define([
                 throw new TypeError("The layer parameter must be either a string or a Layer.");
             }
         } else {
-            throw new TypeError("The layer parameter must be either a string or an esri.layers.Layer.");
+            throw new TypeError("The layer parameter must be either a string or an external:Layer.");
         }
 
         match = url.match(layerUrlRe);
@@ -179,6 +179,27 @@ define([
     ready(addExtensions);
 
     /**
+     * @external Layer
+     * @see {@link https://developers.arcgis.com/javascript/jsapi/layer-amd.html Class: Layer}
+     * @borrows module:metadataExtension~getIdsOfLayersWithMetadata
+     */
+
+    /**
+     * @external DynamicMapServiceLayer
+     * @see {@link https://developers.arcgis.com/javascript/jsapi/dynamicmapservicelayer-amd.html Class: DynamicMapServiceLayer}
+     */
+
+    /**
+     * @external ArcGISTiledMapServiceLayer
+     * @see {@link https://developers.arcgis.com/javascript/jsapi/arcgistiledmapservicelayer-amd.html Class: ArcGISTiledMapServiceLayer}
+     */
+
+    /**
+     * @external FeatureLayer
+     * @see {@link https://developers.arcgis.com/javascript/jsapi/featurelayer-amd.html Class: Feature Layer}
+     */
+
+    /**
      * Extends the layer classes to add methods for calling the Layer Metadata SOE.
      * @exports metadataExtension
      * @deprecated
@@ -186,41 +207,49 @@ define([
     var exports = {
         /**
          * Examines a layer (or a layer URL) and returns the map service url and layer id parts as properties in the returned object.
-         * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
+         * @param {string|external:Layer} layer Either a map service or map service layer URL, or an external:Layer object.
          * @returns {Object} An object with the properties mapServerUrl and layerId.  mapServerUrl is the url to the map server (without any layerIDs).  layerId is the layer ID portion of the URL.  If the URL did not contain a layerID, this property will have a value of null.
+         * @deprecated
          */
         getMapServerUrl: getMapServerUrl,
         /**
-         * Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE root page.
-         * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
-         * @returns {String} The URL to the SOE root.
+         * Given an external:Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE root page.
+         * @param {string|external:Layer} layer Either a map service or map service layer URL, or an external:Layer object.
+         * @returns {string} The URL to the SOE root.
+         * @deprecated
          */
         getMetadataSoeRootUrl: getMetadataSoeRootUrl,
         /**
-         * Given an esri.layers.Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE for a list of valid layer IDs.
-         * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
-         * @returns {String} The URL to a query for a list of valid layers.
+         * Given an external:Layer object or a layer URL, returns the URL for a query to the Layer Metadata SOE for a list of valid layer IDs.
+         * @param {string|external:Layer} layer Either a map service or map service layer URL, or an external:Layer object.
+         * @returns {string} The URL to a query for a list of valid layers.
+         * @deprecated
          */
         getLayersWithMetadataUrl: getValidLayersUrl,
         /**
          * Returns the Layer Metadata SOE URL to retrieve the metadata for a map service feature layer.
-         * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
+         * @param {string|external:Layer} layer Either a map service or map service layer URL, or an external:Layer object.
          * @param {Number} [sublayerId] If the URL provided via the layer parameter does not contain a layer ID, this parameter must be used to supply one.  If the URL already has a layer ID, this parameter will be ignored.
+         * @returns {Object.<string, string>} - Returns an object with a "mapServerUrl" property.
+         * @deprecated
          */
         getMetadataUrl: getMetadataUrl,
         /**
          * Calls the SOE to get the list of layer IDs that correspond to feature layers.
-         * @param {String|esri.layers.Layer} layer Either a map service or map service layer URL, or an esri.layers.Layer object.
+         * @param {string|external:Layer} layer Either a map service or map service layer URL, or an external:Layer object.
          * @param {Function} Event handler function that is called when the query is successful.  Parameter "data" is an array of integers.
          * @param {Function} Event handler function that is called when the query fails.  Parameter "error" is an Error.
+         * @returns {dojo/promise/Deferred.<number[]>}
+         * @deprecated
          */
         getIdsOfLayersWithMetadata: getIdsOfLayersWithMetadata,
         /**
          * Tests to see if a layer supports metadata.
-         * @param {esri/layers/Layer} layer - Either a map service or map service layer URL, or an esri.layers.Layer object.
+         * @param {external:Layer} layer - Either a map service or map service layer URL, or an external:Layer object.
          * @param {function} successHandler - Function that is called when metadata is supported.
          * @param {function} failHandler - Function that is called when metadata is not supported.
          * @returns {Promise.<Boolean>} - Returns a promise. When resolved, a boolean value indicates if the layer supports metadata.
+         * @deprecated
          */
         supportsMetadata: supportsMetadata
     };
