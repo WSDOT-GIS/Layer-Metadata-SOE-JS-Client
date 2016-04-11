@@ -104,6 +104,12 @@
              * @member {Promise.<Object.<string, number[]>>} - Returns list of layers that have metadata associated with them,
              * grouped by common data source.
              * @example
+             * var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");
+             * client.layerSources.then(function (layerSources) {
+             *     console.debug(layerSources);
+             * }, function (error) {
+             *     console.error(error);
+             * });
              * // Output:
              * // {
              * //  "GeodataExternalReplica.DBO.sr24kIncrease": [
