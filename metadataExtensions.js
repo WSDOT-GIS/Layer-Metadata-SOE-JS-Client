@@ -120,7 +120,7 @@ define([
     }
 
     function supportsMetadata(layer, successHandler, failHandler) {
-        var url = getMapServerUrl(layer);
+        var url = getMapServerUrl(layer).mapServerUrl;
         var client = new MetadataClient(url);
         var promise = client.supportsMetadata;
         promise.then(function (isSupported) {
