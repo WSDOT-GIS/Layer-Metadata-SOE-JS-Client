@@ -1,6 +1,12 @@
 Layer Metadata Server Object Extension JavaScript client
 ========================================================
 
+[![Build Status](https://travis-ci.org/WSDOT-GIS/Layer-Metadata-SOE-JS-Client.svg?branch=master)](https://travis-ci.org/WSDOT-GIS/Layer-Metadata-SOE-JS-Client)
+[![bitHound Overall Score](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/badges/score.svg)](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client)
+[![bitHound Dependencies](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/badges/dependencies.svg)](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/master/dependencies/npm)
+[![bitHound Dev Dependencies](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/badges/devDependencies.svg)](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/master/dependencies/npm)
+[![bitHound Code](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/badges/code.svg)](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client)
+
 This project contains extensions to the [ArcGIS API for JavaScript] layer classes that allow them to call the [Layer Metadata SOE].
 
 {{>main}}
@@ -12,21 +18,6 @@ Visual Studio is running and old version of Node.js. If you have a newer version
 
 1. Go to *Tools* | *Options* | *Projects and Solutions* | *External Web Tools*.
 2. Move `$(PATH)` above `$(DevEnvDir)\Extensions\Microsoft\Web Tools\External`
-
-Deprecated
-----------
-
-### metadataExtensions.js ####
-
-This JavaScript file extends the layer classes to add methods for calling the Layer Metadata SOE.
-
-### unittest.html ####
-
-QUnit unit test for metadataExtensions.
-
-## Running the unit test ##
-
-A URL to a map service should be provided via the `url` query string parameter. If this parameter is not provided a form will be shown on the page instead of the tests where you can enter this URL.
 
 [ArcGIS API for JavaScript]:http://js.arcgis.com
 [Layer Metadata SOE]:https://github.com/WSDOT-GIS/LayerMetadataSoe
