@@ -19,7 +19,7 @@
      * @module MetadataClient
      */
 
-    //var validLayersUrl = "exts/LayerMetadata/validLayers?f=json";
+    var validLayersUrl = "exts/LayerMetadata/validLayers?f=json";
     var layerSourcesUrl = "exts/LayerMetadata/layerSources?f=json";
 
     // Enable fetch in node.
@@ -120,26 +120,29 @@
              */
             layerSources: {
                 get: function () {
-                    return new Promise(function (resolve, reject) {
+                    return self.supportsMetadata.then(function (isSupported) {
                         var requestUrl = [url, layerSourcesUrl].join("/");
-                        if (_layerSources) {
-                            resolve(_layerSources);
+
+                        if (!isSupported) {
+                            return false;
                         } else {
-                            self.supportsMetadata.then(function (supported) {
-                                if (!supported) {
-                                    reject(new Error(self.url + " does not support LayerMetadata capability"));
-                                } else {
-                                    console.debug(requestUrl);
-                                    fetch(requestUrl).then(function (response) {
-                                        return response.json();
-                                    }).then(function (layerSources) {
-                                        _layerSources = layerSources;
-                                        resolve(_layerSources);
-                                    }, function (error) {
-                                        reject(error);
-                                    });
-                                }
+                            return fetch(requestUrl).then(function (response) {
+                                return response.json();
                             });
+                        }
+                    });
+                }
+            },
+            validLayers: {
+                get: function () {
+                    return self.supportsMetadata.then(function (supportsMetadata) {
+                        var requestUrl = [url, validLayersUrl].join("/");
+                        if (supportsMetadata) {
+                            return fetch(requestUrl).then(function (response) {
+                                return response.json();
+                            });
+                        } else {
+                            return null;
                         }
                     });
                 }

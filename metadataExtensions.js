@@ -85,38 +85,19 @@ define([
     }
 
     function getIdsOfLayersWithMetadata(layer, successHandler, failHandler) {
-        try {
-            return esriRequest({
-                url: getValidLayersUrl(layer),
-                callbackParamName: "callback",
-                content: {
-                    "f": "json"
-                }
-            }, {
-                useProxy: false
-            }).then(function (data) {
-                if (typeof (data.error) !== "undefined" && typeof (failHandler) === "function") {
-                    failHandler(data.error);
-                }
-                else if (typeof (successHandler) === "function") {
-                    // In the ArcGIS 10.0 version, an array was returned.
-                    // In the ArcGIS 10.1 version, an object is returned.
-                    // This object has a property called layerIds which is an array.
-                    if (!(data instanceof Array)) {
-                        data = data.layerIds;
-                    }
-                    successHandler(data);
-                }
-            }, function (error) {
-                if (typeof (failHandler) === "function") {
-                    failHandler(error);
-                }
-            });
-        } catch (err) {
-            if (failHandler) {
-                failHandler(err);
+        var url = getMapServerUrl(layer).mapServerUrl;
+        var client = new MetadataClient(url);
+        var output = client.validLayers.then(function (sources) {
+            var output = Array.isArray(sources) ? sources : sources.layerIds;
+            if (typeof successHandler === "function") {
+                successHandler(data);
             }
-        }
+        }, function (error) {
+            if (typeof failHandler === "function") {
+                failHandler(error);
+            }
+        });
+        return output;
     }
 
     function supportsMetadata(layer, successHandler, failHandler) {

@@ -17,6 +17,20 @@ describe("metadataSoeUtils test suite", function () {
         });
     });
 
+    it("should be able to get valid layers", function (done) {
+        var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");
+        try {
+            client.validLayers.then(function (layers) {
+                expect(layers).toBeTruthy();
+                done();
+            }, function (err) {
+                done.fail(err);
+            });
+        } catch (e) {
+            done.fail(e);
+        }
+    });
+
     it("should be able to get metadata layer sources", function (done) {
         var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");
         try {
