@@ -10,10 +10,10 @@ define([
     "dojo/_base/lang",
     "esri/request",
     "dojo/ready",
-    "Layer",
-    "DynamicMapServiceLayer",
-    "ArcGISTiledMapServiceLayer",
-    "FeatureLayer",
+    "esri/layers/layer",
+    "esri/layers/DynamicMapServiceLayer",
+    "esri/layers/ArcGISTiledMapServiceLayer",
+    "esri/layers/FeatureLayer",
     "./MetadataClient"
 ], function (
     lang,
