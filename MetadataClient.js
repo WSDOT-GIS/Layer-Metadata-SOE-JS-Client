@@ -21,6 +21,7 @@
 
     var validLayersUrl = "exts/LayerMetadata/validLayers?f=json";
     var layerSourcesUrl = "exts/LayerMetadata/layerSources?f=json";
+    var metadataUrl = "exts/LayerMetadata/metadata";
 
     // Enable fetch in node.
     // Browser polyfills will be handled with browser script tags.
@@ -130,6 +131,22 @@
                                 return response.json();
                             });
                         }
+                    });
+                }
+            },
+            /**
+             * Gets URLs to unique metadata items.
+             * @returns {Object.<string, string>} - Key value pairs. Keys are table names and values are metadata URLs.
+             */
+            metadataLinks: {
+                get: function () {
+                    return self.layerSources.then(function (layerSources) {
+                        var requestUrl = [url, metadataUrl].join("/");
+                        var output = {};
+                        for (var key in layerSources) {
+                            output[key] = [requestUrl, layerSources[key][0]].join("/");
+                        }
+                        return output;
                     });
                 }
             },

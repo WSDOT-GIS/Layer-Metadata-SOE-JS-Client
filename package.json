@@ -1,7 +1,7 @@
 {
   "name": "layer-metadata-soe-client",
   "readme": "README.md",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Client for accessing layer metadata from an ArcGIS Server map service which has the Layer Metadata SOE installed.",
   "main": "metadataExtensions.js",
   "scripts": {

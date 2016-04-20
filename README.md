@@ -29,6 +29,7 @@ This project contains extensions to the [ArcGIS API for JavaScript] layer classe
         * [~url](#module_MetadataClient--MetadataClient..url) : <code>string</code>
         * [~supportsMetadata](#module_MetadataClient--MetadataClient..supportsMetadata) : <code>Promise.&lt;Boolean&gt;</code>
         * [~layerSources](#module_MetadataClient--MetadataClient..layerSources) : <code>Promise.&lt;Object.&lt;string, Array.&lt;number&gt;&gt;&gt;</code>
+        * [~metadataLinks](#module_MetadataClient--MetadataClient..metadataLinks) ⇒ <code>Object.&lt;string, string&gt;</code>
 
 <a name="exp_module_MetadataClient--MetadataClient"></a>
 
@@ -91,6 +92,13 @@ client.layerSources.then(function (layerSources) {
 //  "GeodataExternalReplica.DBO.LAPR_Lines": [ 5, 6 ]
 // }
 ```
+<a name="module_MetadataClient--MetadataClient..metadataLinks"></a>
+
+#### MetadataClient~metadataLinks ⇒ <code>Object.&lt;string, string&gt;</code>
+Gets URLs to unique metadata items.
+
+**Kind**: inner property of <code>[MetadataClient](#exp_module_MetadataClient--MetadataClient)</code>  
+**Returns**: <code>Object.&lt;string, string&gt;</code> - - Key value pairs. Keys are table names and values are metadata URLs.  
 <a name="module_metadataExtension"></a>
 
 ## ~~metadataExtension~~
