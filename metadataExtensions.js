@@ -88,10 +88,17 @@ define([
         var url = getMapServerUrl(layer).mapServerUrl;
         var client = new MetadataClient(url);
         var output = client.validLayers.then(function (sources) {
-            var output = Array.isArray(sources) ? sources : sources.layerIds;
-            if (typeof successHandler === "function") {
-                successHandler(data);
+            var output;
+            if (!sources) {
+                output = null;
+            } else {
+                output = Array.isArray(sources) ? sources : sources.layerIds;
             }
+
+            if (typeof successHandler === "function") {
+                successHandler(output);
+            }
+            return output;
         }, function (error) {
             if (typeof failHandler === "function") {
                 failHandler(error);
