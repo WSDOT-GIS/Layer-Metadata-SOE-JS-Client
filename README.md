@@ -2,10 +2,6 @@ Layer Metadata Server Object Extension JavaScript client
 ========================================================
 
 [![Build Status](https://travis-ci.org/WSDOT-GIS/Layer-Metadata-SOE-JS-Client.svg?branch=master)](https://travis-ci.org/WSDOT-GIS/Layer-Metadata-SOE-JS-Client)
-[![bitHound Overall Score](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/badges/score.svg)](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client)
-[![bitHound Dependencies](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/badges/dependencies.svg)](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/master/dependencies/npm)
-[![bitHound Dev Dependencies](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/badges/devDependencies.svg)](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/master/dependencies/npm)
-[![bitHound Code](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client/badges/code.svg)](https://www.bithound.io/github/WSDOT-GIS/Layer-Metadata-SOE-JS-Client)
 
 This project contains extensions to the [ArcGIS API for JavaScript] layer classes that allow them to call the [Layer Metadata SOE].
 
@@ -56,22 +52,41 @@ Map service URL
 <a name="module_MetadataClient--MetadataClient..supportsMetadata"></a>
 
 #### MetadataClient~supportsMetadata : <code>Promise.&lt;Boolean&gt;</code>
-Tests a map service to see if it supports the Layer Metadata SOE.First call submits an HTTP request. Subsequent calls do not.Returns a promise that, when resolved, returns a boolean valueindicating if the service supports the layer metadata capability.
+Tests a map service to see if it supports the Layer Metadata SOE.
+First call submits an HTTP request. Subsequent calls do not.
+Returns a promise that, when resolved, returns a boolean value
+indicating if the service supports the layer metadata capability.
 
 **Kind**: inner property of [<code>MetadataClient</code>](#exp_module_MetadataClient--MetadataClient)  
 **Example**  
 ```js
-var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");client.supportsMetadata.then(function (isSupported) {     console.log("layer does " + isSupported ? "" : "not " + "support metadata");});
+var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");
+client.supportsMetadata.then(function (isSupported) {
+     console.log("layer does " + isSupported ? "" : "not " + "support metadata");
+});
 ```
 <a name="module_MetadataClient--MetadataClient..layerSources"></a>
 
 #### MetadataClient~layerSources : <code>Promise.&lt;Object.&lt;string, Array.&lt;number&gt;&gt;&gt;</code>
-Returns list of layers that have metadata associated with them,grouped by common data source.
+Returns list of layers that have metadata associated with them,
+grouped by common data source.
 
 **Kind**: inner property of [<code>MetadataClient</code>](#exp_module_MetadataClient--MetadataClient)  
 **Example**  
 ```js
-var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");client.layerSources.then(function (layerSources) {    console.debug(layerSources);}, function (error) {    console.error(error);});// Output:// {//  "GeodataExternalReplica.DBO.sr24kIncrease": [ 0, 1, 4 ],//  "GeodataExternalReplica.DBO.sr24kDecrease": [ 2 ],//  "GeodataExternalReplica.DBO.sr24kRamp": [ 3 ],//  "GeodataExternalReplica.DBO.LAPR_Lines": [ 5, 6 ]// }
+var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");
+client.layerSources.then(function (layerSources) {
+    console.debug(layerSources);
+}, function (error) {
+    console.error(error);
+});
+// Output:
+// {
+//  "GeodataExternalReplica.DBO.sr24kIncrease": [ 0, 1, 4 ],
+//  "GeodataExternalReplica.DBO.sr24kDecrease": [ 2 ],
+//  "GeodataExternalReplica.DBO.sr24kRamp": [ 3 ],
+//  "GeodataExternalReplica.DBO.LAPR_Lines": [ 5, 6 ]
+// }
 ```
 <a name="module_MetadataClient--MetadataClient..metadataLinks"></a>
 
