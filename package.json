@@ -10,6 +10,7 @@
     "metadataExtensions.d.ts"
   ],
   "scripts": {
+    "prepare": "tsc",
     "test": "jasmine",
     "docs": "jsdoc2md MetadataClient.js --template README.hbs > README.md"
   },
@@ -28,10 +29,14 @@
   },
   "homepage": "https://github.com/WSDOT-GIS/Layer-Metadata-SOE-JS-Client#readme",
   "devDependencies": {
-    "jasmine": "^3.1.0",
+    "jasmine": "^3.3.0",
     "jsdoc-to-markdown": "^4.0.1",
-    "node-fetch": "^2.1.2",
-    "prettier": "^1.12.1"
+    "node-fetch": "^2.2.1",
+    "prettier": "^1.15.1",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.6"
   },
   "dependencies": {}
 }

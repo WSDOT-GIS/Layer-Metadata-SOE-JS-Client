@@ -1,7 +1,7 @@
 /*eslint-env node,jasmine*/
 
 if (typeof MetadataClient === "undefined") {
-    var MetadataClient = require('../MetadataClient.js');
+    var MetadataClient = require('../MetadataClient.js').default;
 }
 
 describe("metadataSoeUtils test suite", function () {
