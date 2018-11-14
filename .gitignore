@@ -1,4 +1,5 @@
 MetadataClient.js
+MetadataClient.d.ts
 
 .vscode/*
 !.vscode/settings.json

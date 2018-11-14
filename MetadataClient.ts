@@ -4,9 +4,9 @@
  * @module MetadataClient
  */
 
-let validLayersUrl = "exts/LayerMetadata/validLayers?f=json";
-let layerSourcesUrl = "exts/LayerMetadata/layerSources?f=json";
-let metadataUrl = "exts/LayerMetadata/metadata";
+const validLayersUrl = "exts/LayerMetadata/validLayers?f=json";
+const layerSourcesUrl = "exts/LayerMetadata/layerSources?f=json";
+const metadataUrl = "exts/LayerMetadata/metadata";
 
 /**
  * Determines if an array contains a specific string.
@@ -15,18 +15,17 @@ let metadataUrl = "exts/LayerMetadata/metadata";
  * @returns {Boolean} - Returns true if it does, false if it doesn't.
  */
 function arrayContainsString(a: string[], s: string) {
-  let output = false;
+  // tslint:disable-next-line:prefer-for-of
   for (let i = 0; i < a.length; i++) {
     if (a[i] === s) {
-      output = true;
-      break;
+      return true;
     }
   }
-  return output;
+  return false;
 }
 
 export interface ILayerLayerSources {
-    [key: string]: number[];
+  [key: string]: number[];
 }
 
 export default class MeatadataClient {
@@ -68,8 +67,6 @@ export default class MeatadataClient {
       });
   }
 
-
-
   /**
    * @member {Promise.<Object.<string, number[]>>} - Returns list of layers that have metadata associated with them,
    * grouped by common data source.
@@ -103,7 +100,7 @@ export default class MeatadataClient {
           return response.json().then(ls => {
             self._layerSources = ls;
             return ls;
-          })
+          });
         });
       }
     });

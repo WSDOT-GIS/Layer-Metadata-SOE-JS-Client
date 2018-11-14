@@ -1,12 +1,12 @@
 /*eslint-env node,jasmine*/
 
-if (typeof MetadataClient === "undefined") {
-    var MetadataClient = require('../MetadataClient.js').default;
-}
+require("isomorphic-fetch");
+
+const MetadataClient = require("../MetadataClient").default;
 
 describe("metadataSoeUtils test suite", function () {
-    var serviceUrl = "http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer";
-    it("should be able to test for metadata SOE support", function (done) {
+    var serviceUrl = "https://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer";
+    it("should be able to test for metadata SOE support", async function (done) {
         var client = new MetadataClient(serviceUrl);
         client.supportsMetadata.then(function (isSupported) {
             expect(isSupported).toBe(true);
@@ -14,7 +14,11 @@ describe("metadataSoeUtils test suite", function () {
             client.supportsMetadata.then(function (isSupported) {
                 expect(isSupported).toBe(true);
                 done();
+            }, function(error) {
+                done.fail(error);
             });
+        }, function (error) {
+            done.fail(error);
         });
     });
 
