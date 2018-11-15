@@ -1,17 +1,34 @@
 /// <reference lib="dom" />
 
 /**
- * @module MetadataClient
+ * @package @wsdot/layer-metadata-soe-client
  */
 
+/** @ignore */
 const validLayersUrl = "exts/LayerMetadata/validLayers?f=json";
+/** @ignore */
 const layerSourcesUrl = "exts/LayerMetadata/layerSources?f=json";
+/** @ignore */
 const metadataUrl = "exts/LayerMetadata/metadata";
 
+/**
+ * An error returned from an ArcGIS service.
+ * @example
+ * // Inside async function
+ * const response = await fetch("https://www.example.com/ArcGIS/rest/services/MyService/query?invalidOption=thisisinvalid");
+ * const obj = await response.json();
+ * if (obj.error) {
+ *  throw new ArcGisError(obj.error);
+ * }
+ */
 export class ArcGisError extends Error {
+  /**
+   * Error code
+   */
   public readonly code?: number;
   /**
-   *
+   * Creates a new instance of ArcGisError.
+   * @param errorInfo - The "error" property of the response object returned from a failed ArcGIS Server request.
    */
   constructor(public readonly errorInfo: IError) {
     super(errorInfo.message);
@@ -19,15 +36,27 @@ export class ArcGisError extends Error {
   }
 }
 
+/**
+ * Error information object returned from a bad ArcGIS service request.
+ */
 export interface IError {
   [key: string]: any;
+  /** Status code */
   code: number;
+  /** text description of error */
   message: string;
 }
 
+/**
+ * Information about a map service.
+ */
 export interface IServiceInfo {
   [key: string]: any;
+  /**
+   * Comma-separated list of the names of extensions supported by a service. (Commas may also be followed by spaces)
+   */
   supportedExtensions?: string;
+  /** Error information. This property will only be present if a problem has occured with a request. */
   error?: IError;
 }
 
@@ -60,6 +89,11 @@ export async function detectLayerMetadataSupport(serviceUrl: string) {
   return /LayerMetadata/.test(serviceInfo.supportedExtensions);
 }
 
+/**
+ * Gets a list of data sources
+ * @param serviceUrl Map service URL
+ * @returns An object keyed by data set names with values that are layer ID integers associated with those datasets.
+ */
 export async function getLayerSources(serviceUrl: string) {
   const url = [serviceUrl, layerSourcesUrl].join("/");
   const response = await fetch(url);
@@ -69,7 +103,9 @@ export async function getLayerSources(serviceUrl: string) {
 
 /**
  * Gets URLs to unique metadata items.
- * @returns {Object.<string, string>} - Key value pairs. Keys are table names and values are metadata URLs.
+ * @param url map service URL
+ * @param layerSources If you have already called getLayerSources, you can pass in the results here to avoid making a duplicate request.
+ * @returns Key value pairs. Keys are table names and values are metadata URLs.
  */
 export async function getMetadataLinks(
   url: string,
@@ -88,17 +124,13 @@ export async function getMetadataLinks(
   return output;
 }
 
-export async function getValidLayers(
-  url: string,
-  checkForMetadataSupport?: boolean
-) {
-  const supportsMetadata = checkForMetadataSupport
-    ? await detectLayerMetadataSupport(url)
-    : true;
-  if (!supportsMetadata) {
-    return null;
-  }
-
+/**
+ * Gets a list of valid layer IDs
+ * @param url Map service URL
+ * @throws {ArcGisError} Thrown if the map service returns an error.
+ * @throws {TypeError} Thrown if HTTP request returns an object in unexpected format.
+ */
+export async function getValidLayers(url: string) {
   const requestUrl = [url, validLayersUrl].join("/");
   const response = await fetch(requestUrl);
   const obj = await response.json();
@@ -111,11 +143,11 @@ export async function getValidLayers(
       `response was not expected type: ${JSON.stringify(obj)}`
     );
   }
-
 }
 
-
+/**
+ * A mapping of data sources to layer ID integers.
+ */
 export interface ILayerLayerSources {
   [key: string]: number[];
 }
-

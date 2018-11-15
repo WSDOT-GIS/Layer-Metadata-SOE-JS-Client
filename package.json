@@ -13,7 +13,7 @@
   "scripts": {
     "prepare": "node scripts/prepare.js",
     "test": "tsc ./spec/MetadataClientSpec.ts && jasmine",
-    "docs": "jsdoc2md index.js --template README.hbs > README.md"
+    "docs": "typedoc --theme markdown --out docs --readme none --name \"@wsdot/layer-metadata-soe-client\""
   },
   "repository": {
     "type": "git",
@@ -31,14 +31,15 @@
   "homepage": "https://github.com/WSDOT-GIS/Layer-Metadata-SOE-JS-Client#readme",
   "devDependencies": {
     "@types/jasmine": "^2.8.11",
-    "@types/node": "^10.12.7",
+    "@types/node": "^10.12.8",
     "isomorphic-fetch": "^2.2.1",
     "jasmine": "^3.3.0",
-    "jsdoc-to-markdown": "^4.0.1",
     "prettier": "^1.15.2",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
     "tslint-plugin-prettier": "^2.0.1",
+    "typedoc": "^0.13.0",
+    "typedoc-plugin-markdown": "^1.1.18",
     "typescript": "^3.1.6"
   },
   "dependencies": {}

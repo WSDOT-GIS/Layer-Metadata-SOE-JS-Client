@@ -1,56 +1,82 @@
 Layer Metadata Server Object Extension JavaScript client
 ========================================================
 
+This package provides functions for calling the [Layer Metadata SOE].
+
+[![npm version](https://img.shields.io/npm/v/@wsdot/layer-metadata-soe-client.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/layer-metadata-soe-client)
+[![npm license](https://img.shields.io/npm/l/@wsdot/layer-metadata-soe-client.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/layer-metadata-soe-client)
+[![npm donwloads](https://img.shields.io/npm/dm/@wsdot/layer-metadata-soe-client.svg?style=flat-square)](https://www.npmjs.org/package/@wsdot/layer-metadata-soe-client)
 [![Build Status](https://travis-ci.org/WSDOT-GIS/Layer-Metadata-SOE-JS-Client.svg?branch=master)](https://travis-ci.org/WSDOT-GIS/Layer-Metadata-SOE-JS-Client)
 
-This project contains extensions to the [ArcGIS API for JavaScript] layer classes that allow them to call the [Layer Metadata SOE].
+Usage
+-----
 
-<a name="module_MetadataClient"></a>
+Install with the following command.
 
-## MetadataClient
+```sh
+npm install @wsdot/layer-metadata-soe-client
+```
 
-* [MetadataClient](#module_MetadataClient)
-    * [~getServiceInfo(serviceUrl)](#module_MetadataClient..getServiceInfo)
-    * [~detectLayerMetadataSupport(serviceUrl)](#module_MetadataClient..detectLayerMetadataSupport)
-    * [~getMetadataLinks()](#module_MetadataClient..getMetadataLinks) ⇒ <code>Object.&lt;string, string&gt;</code>
+See the [API documentation](./docs/README.md) for detailed information.
 
-<a name="module_MetadataClient..getServiceInfo"></a>
+### TypeScript Example
 
-### MetadataClient~getServiceInfo(serviceUrl)
-Gets map service info
+```TypeScript
+import { detectLayerMetadataSupport, getMetadataLinks, ArcGisError } from "@wsdot/layer-metadata-soe-client"
 
-**Kind**: inner method of [<code>MetadataClient</code>](#module_MetadataClient)  
-**Throws**:
+/**
+ * Create HTML lists of metadata documents for map service layer data sources.
+ * @returns a document fragment containing lists and headings.
+ */
+async function createMetadataList (url: string) {
+    const isSupported = await detectLayerMetadataSupport(url);
+    if (!isSupported) {
+        const msg = `Service does not support LayerMetadata SOE: ${url}`;
+        throw new Error(msg);
+    }
 
-- <code>ArcGisError</code> 
+    try {
+        const metadataLinks = await getMetadataLinks(url);
+        const frag = document.createDocumentFragment();
+        for (const dataName in metadataLinks) {
+            const heading = document.createElement("h2");
+            heading.textContent = dataName;
+            frag.appendChild(heading);
+            if (metadataLinks.hasOwnProperty(dataName)) {
+                const linkUrls = metadataLinks[dataName];
+                const list = document.createElement("ul");
+                for (const linkUrl of linkUrls) {
+                    const li = document.createElement("li");
+                    const a = document.createElement("a");
+                    a.href = linkUrl;
+                    a.textContent = linkUrl;
+                    a.target = "_blank";
+                    li.appendChild(a);
+                    list.appendChild(li);
+                }
+                frag.appendChild(list);
+            }
+        }
+        return frag;
+    } catch (error) {
+        if (error instanceof ArcGisError) {
+            console.error(`The service returned an error message. ${error.code}: ${error.message}`);
+        }
+        throw error;
+    }
+}
 
-
-| Param | Description |
-| --- | --- |
-| serviceUrl | map service URL. |
-
-<a name="module_MetadataClient..detectLayerMetadataSupport"></a>
-
-### MetadataClient~detectLayerMetadataSupport(serviceUrl)
-Detects if a map service supports the "LayerMetadata" capability.
-
-**Kind**: inner method of [<code>MetadataClient</code>](#module_MetadataClient)  
-**Throws**:
-
-- <code>ArcGisError</code> 
-
-
-| Param | Description |
-| --- | --- |
-| serviceUrl | Map or Feature service URL. |
-
-<a name="module_MetadataClient..getMetadataLinks"></a>
-
-### MetadataClient~getMetadataLinks() ⇒ <code>Object.&lt;string, string&gt;</code>
-Gets URLs to unique metadata items.
-
-**Kind**: inner method of [<code>MetadataClient</code>](#module_MetadataClient)  
-**Returns**: <code>Object.&lt;string, string&gt;</code> - - Key value pairs. Keys are table names and values are metadata URLs.  
+// Specify the map service
+const url = "https://example.com/ArcGIS/services/MyService/MapServer";
+// Call the async function and handle success and error conditions.
+createMetadataList(url).then(frag => {
+    // Append the document fragment to the document body.
+    document.body.appendChild(frag);
+}, error => {
+    // log the error to the console.
+    console.error("list creation error", error);
+})
+```
 
 [ArcGIS API for JavaScript]:http://js.arcgis.com
 [Layer Metadata SOE]:https://github.com/WSDOT-GIS/LayerMetadataSoe

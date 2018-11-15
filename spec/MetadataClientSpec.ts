@@ -28,7 +28,7 @@ describe("metadataSoeUtils test suite", () => {
 
   it("should be able to get valid layers", async done => {
     try {
-      const validLayers = await getValidLayers(serviceUrl, false);
+      const validLayers = await getValidLayers(serviceUrl);
       expect(validLayers).toBeTruthy();
       done();
     } catch (error) {
