@@ -1,17 +1,19 @@
 {
   "name": "@wsdot/layer-metadata-soe-client",
-  "version": "2.2.2",
+  "version": "3.0.0-alpha.0",
   "description": "Client for accessing layer metadata from an ArcGIS Server map service which has the Layer Metadata SOE installed.",
-  "main": "metadataExtensions.js",
-  "types": "metadataExtensions.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "module": "index",
   "files": [
-    "MetadataClient.js",
-    "MetadataClient.d.ts",
-    "metadataExtensions.d.ts"
+    "index.js",
+    "index.mjs",
+    "index.d.ts"
   ],
   "scripts": {
-    "test": "jasmine",
-    "docs": "jsdoc2md MetadataClient.js metadataExtensions.js --template README.hbs > README.md"
+    "prepare": "node scripts/prepare.js",
+    "test": "tsc ./spec/MetadataClientSpec.ts && jasmine",
+    "docs": "typedoc --theme markdown --out docs --readme none --name \"@wsdot/layer-metadata-soe-client\""
   },
   "repository": {
     "type": "git",
@@ -28,10 +30,17 @@
   },
   "homepage": "https://github.com/WSDOT-GIS/Layer-Metadata-SOE-JS-Client#readme",
   "devDependencies": {
-    "jasmine": "^3.1.0",
-    "jsdoc-to-markdown": "^4.0.1",
-    "node-fetch": "^2.1.2",
-    "prettier": "^1.11.1"
+    "@types/jasmine": "^2.8.11",
+    "@types/node": "^10.12.8",
+    "isomorphic-fetch": "^2.2.1",
+    "jasmine": "^3.3.0",
+    "prettier": "^1.15.2",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.16.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typedoc": "^0.13.0",
+    "typedoc-plugin-markdown": "^1.1.18",
+    "typescript": "^3.1.6"
   },
   "dependencies": {}
 }

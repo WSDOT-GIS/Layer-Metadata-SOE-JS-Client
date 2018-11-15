@@ -1,3 +1,9 @@
+index.*
+!index.ts
+
+spec/**/*.js
+spec/**/*.d.ts
+
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
