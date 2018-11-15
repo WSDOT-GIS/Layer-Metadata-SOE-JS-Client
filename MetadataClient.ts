@@ -8,147 +8,114 @@ const validLayersUrl = "exts/LayerMetadata/validLayers?f=json";
 const layerSourcesUrl = "exts/LayerMetadata/layerSources?f=json";
 const metadataUrl = "exts/LayerMetadata/metadata";
 
-/**
- * Determines if an array contains a specific string.
- * @param {string[]} a - An array
- * @param {string} s - a string
- * @returns {Boolean} - Returns true if it does, false if it doesn't.
- */
-function arrayContainsString(a: string[], s: string) {
-  // tslint:disable-next-line:prefer-for-of
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] === s) {
-      return true;
-    }
+export class ArcGisError extends Error {
+  public readonly code?: number;
+  /**
+   *
+   */
+  constructor(public readonly errorInfo: IError) {
+    super(errorInfo.message);
+    this.code = errorInfo.code;
   }
-  return false;
 }
+
+export interface IError {
+  [key: string]: any;
+  code: number;
+  message: string;
+}
+
+export interface IServiceInfo {
+  [key: string]: any;
+  supportedExtensions?: string;
+  error?: IError;
+}
+
+/**
+ * Gets map service info
+ * @param serviceUrl map service URL.
+ * @throws {ArcGisError}
+ */
+export async function getServiceInfo(
+  serviceUrl: string
+): Promise<IServiceInfo> {
+  const response = await fetch([serviceUrl, "f=json"].join("?"));
+  const serviceInfo = (await response.json()) as IServiceInfo;
+  if (serviceInfo.error) {
+    throw new ArcGisError(serviceInfo.error);
+  }
+  return serviceInfo;
+}
+
+/**
+ * Detects if a map service supports the "LayerMetadata" capability.
+ * @param serviceUrl Map or Feature service URL.
+ * @throws {ArcGisError}
+ */
+export async function detectLayerMetadataSupport(serviceUrl: string) {
+  const serviceInfo = await getServiceInfo(serviceUrl);
+  if (!serviceInfo.supportedExtensions) {
+    return false;
+  }
+  return /LayerMetadata/.test(serviceInfo.supportedExtensions);
+}
+
+export async function getLayerSources(serviceUrl: string) {
+  const url = [serviceUrl, layerSourcesUrl].join("/");
+  const response = await fetch(url);
+  const layerSources = (await response.json()) as ILayerLayerSources;
+  return layerSources;
+}
+
+/**
+ * Gets URLs to unique metadata items.
+ * @returns {Object.<string, string>} - Key value pairs. Keys are table names and values are metadata URLs.
+ */
+export async function getMetadataLinks(
+  url: string,
+  layerSources?: ILayerLayerSources
+) {
+  if (!layerSources) {
+    layerSources = await getLayerSources(url);
+  }
+
+  const requestUrl = [url, metadataUrl].join("/");
+  const output: { [key: string]: string } = {};
+  // tslint:disable-next-line:forin
+  for (const key in layerSources) {
+    output[key] = [requestUrl, layerSources[key][0]].join("/");
+  }
+  return output;
+}
+
+export async function getValidLayers(
+  url: string,
+  checkForMetadataSupport?: boolean
+) {
+  const supportsMetadata = checkForMetadataSupport
+    ? await detectLayerMetadataSupport(url)
+    : true;
+  if (!supportsMetadata) {
+    return null;
+  }
+
+  const requestUrl = [url, validLayersUrl].join("/");
+  const response = await fetch(requestUrl);
+  const obj = await response.json();
+  if (obj.layerIds) {
+    return obj.layerIds as number[];
+  } else if (obj.error) {
+    throw new ArcGisError(obj.error);
+  } else {
+    throw new TypeError(
+      `response was not expected type: ${JSON.stringify(obj)}`
+    );
+  }
+
+}
+
 
 export interface ILayerLayerSources {
   [key: string]: number[];
 }
 
-export default class MeatadataClient {
-  public readonly url: string;
-  // tslint:disable-next-line:variable-name
-  private _supportsMetadata: boolean | undefined;
-  // tslint:disable-next-line:variable-name
-  private _layerSources: ILayerLayerSources | null | undefined;
-  /**
-   * @member {string} - Map service URL
-   */
-
-  /**
-   * @member {Promise.<Boolean>} - Tests a map service to see if it supports the Layer Metadata SOE.
-   * First call submits an HTTP request. Subsequent calls do not.
-   * Returns a promise that, when resolved, returns a boolean value
-   * indicating if the service supports the layer metadata capability.
-   * @example
-   * var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");
-   * client.supportsMetadata.then(function (isSupported) {
-   *      console.log("layer does " + isSupported ? "" : "not " + "support metadata");
-   * });
-   */
-  public get supportsMetadata(): Promise<boolean> {
-    if (typeof this._supportsMetadata === "boolean") {
-      return new Promise(() => this._supportsMetadata);
-    }
-    return fetch(this.url + "?f=json")
-      .then(response => response.json())
-      .then(serviceInfo => {
-        const supportedExtensions =
-          serviceInfo && serviceInfo.supportedExtensions
-            ? serviceInfo.supportedExtensions.split(/[,\s]+/)
-            : null;
-        this._supportsMetadata =
-          Array.isArray(supportedExtensions) &&
-          arrayContainsString(supportedExtensions, "LayerMetadata");
-        return this._supportsMetadata;
-      });
-  }
-
-  /**
-   * @member {Promise.<Object.<string, number[]>>} - Returns list of layers that have metadata associated with them,
-   * grouped by common data source.
-   * @example
-   * var client = new MetadataClient("http://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer");
-   * client.layerSources.then(function (layerSources) {
-   *     console.debug(layerSources);
-   * }, function (error) {
-   *     console.error(error);
-   * });
-   * // Output:
-   * // {
-   * //  "GeodataExternalReplica.DBO.sr24kIncrease": [ 0, 1, 4 ],
-   * //  "GeodataExternalReplica.DBO.sr24kDecrease": [ 2 ],
-   * //  "GeodataExternalReplica.DBO.sr24kRamp": [ 3 ],
-   * //  "GeodataExternalReplica.DBO.LAPR_Lines": [ 5, 6 ]
-   * // }
-   */
-  public get layerSources(): Promise<ILayerLayerSources> {
-    if (this._layerSources !== undefined) {
-      return new Promise(() => this._layerSources);
-    }
-    const self = this;
-    return this.supportsMetadata.then(isSupported => {
-      const requestUrl = [this.url, layerSourcesUrl].join("/");
-
-      if (!isSupported) {
-        return false;
-      } else {
-        return fetch(requestUrl).then(response => {
-          return response.json().then(ls => {
-            self._layerSources = ls;
-            return ls;
-          });
-        });
-      }
-    });
-  }
-  /**
-   * Gets URLs to unique metadata items.
-   * @returns {Object.<string, string>} - Key value pairs. Keys are table names and values are metadata URLs.
-   */
-  public get metadataLinks(): Promise<{ [key: string]: string }> {
-    const { url } = this;
-    return this.layerSources.then(layerSources => {
-      const requestUrl = [url, metadataUrl].join("/");
-      const output: any = {};
-      // tslint:disable-next-line:forin
-      for (const key in layerSources) {
-        output[key] = [requestUrl, layerSources[key][0]].join("/");
-      }
-      return output;
-    });
-  }
-  public get validLayers() {
-    const { url } = this;
-    return this.supportsMetadata.then(supportsMetadata => {
-      const requestUrl = [url, validLayersUrl].join("/");
-      if (supportsMetadata) {
-        return fetch(requestUrl).then(response => {
-          return response.json();
-        });
-      } else {
-        return null;
-      }
-    });
-  }
-
-  /**
-   * @alias module:MetadataClient
-   * @constructor
-   * @param {string} url - URL to a map service.
-   * @throws {TypeError} thrown if no map service URL is provided.
-   */
-  constructor(url: string | { [key: string]: any; url: string }) {
-    if (typeof url === "object" && url.url) {
-      url = url;
-    }
-    if (!url) {
-      throw new TypeError("No map service URL provided.");
-    }
-    // Remove trailing slash from URL if present and assign to property.
-    this.url = (url as string).replace(/\/$/, "");
-  }
-}

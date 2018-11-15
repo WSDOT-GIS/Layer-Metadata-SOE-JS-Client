@@ -4,13 +4,15 @@
   "description": "Client for accessing layer metadata from an ArcGIS Server map service which has the Layer Metadata SOE installed.",
   "main": "metadataClient.js",
   "types": "metadataClient.d.ts",
+  "module": "metadataClient",
   "files": [
     "MetadataClient.js",
+    "metadataClient.mjs",
     "MetadataClient.d.ts"
   ],
   "scripts": {
-    "prepare": "tsc",
-    "test": "jasmine",
+    "prepare": "node scripts/prepare.js",
+    "test": "tsc ./spec/MetadataClientSpec.ts && jasmine",
     "docs": "jsdoc2md MetadataClient.js --template README.hbs > README.md"
   },
   "repository": {
@@ -28,6 +30,8 @@
   },
   "homepage": "https://github.com/WSDOT-GIS/Layer-Metadata-SOE-JS-Client#readme",
   "devDependencies": {
+    "@types/jasmine": "^2.8.11",
+    "@types/node": "^10.12.7",
     "isomorphic-fetch": "^2.2.1",
     "jasmine": "^3.3.0",
     "jsdoc-to-markdown": "^4.0.1",
