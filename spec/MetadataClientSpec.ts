@@ -1,6 +1,5 @@
 /// <reference lib="es2015" />
 
-
 if (typeof fetch === "undefined") {
   // tslint:disable-next-line:no-var-requires
   require("isomorphic-fetch");
@@ -10,9 +9,8 @@ import {
   detectLayerMetadataSupport,
   getLayerSources,
   getMetadataLinks,
-  getServiceInfo,
   getValidLayers
-} from "../MetadataClient";
+} from "../index";
 
 const serviceUrl =
   "https://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer";

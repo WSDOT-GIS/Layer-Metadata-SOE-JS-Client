@@ -1,6 +1,5 @@
-MetadataClient.js
-MetadataClient.d.ts
-MetadataClient.mjs
+index.*
+!index.ts
 
 spec/**/*.js
 spec/**/*.d.ts

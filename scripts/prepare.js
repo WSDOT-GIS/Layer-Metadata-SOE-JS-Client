@@ -16,6 +16,6 @@ function execPromise(command) {
 
 (async () => {
   await execPromise("tsc --target es2015 --module es2015");
-  await fs.promises.rename("MetadataClient.js", "MetadataClient.mjs");
+  await fs.promises.rename("index.js", "index.mjs");
   await execPromise("tsc --target es5 --module commonjs");
 })();
