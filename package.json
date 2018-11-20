@@ -1,6 +1,6 @@
 {
   "name": "@wsdot/layer-metadata-soe-client",
-  "version": "3.0.0-beta.0",
+  "version": "3.0.0",
   "description": "Client for accessing layer metadata from an ArcGIS Server map service which has the Layer Metadata SOE installed.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -30,8 +30,8 @@
   },
   "homepage": "https://github.com/WSDOT-GIS/Layer-Metadata-SOE-JS-Client#readme",
   "devDependencies": {
-    "@types/jasmine": "^2.8.11",
-    "@types/node": "^10.12.8",
+    "@types/jasmine": "^3.3.0",
+    "@types/node": "^10.12.9",
     "isomorphic-fetch": "^2.2.1",
     "jasmine": "^3.3.0",
     "prettier": "^1.15.2",
@@ -39,7 +39,7 @@
     "tslint-config-prettier": "^1.16.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typedoc": "^0.13.0",
-    "typedoc-plugin-markdown": "^1.1.18",
+    "typedoc-plugin-markdown": "^1.1.19",
     "typescript": "^3.1.6"
   },
   "dependencies": {}
