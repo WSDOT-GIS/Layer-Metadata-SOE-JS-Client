@@ -1,10 +1,5 @@
 /// <reference lib="es2015" />
 
-if (typeof fetch === "undefined") {
-  // tslint:disable-next-line:no-var-requires
-  require("isomorphic-fetch");
-}
-
 import {
   detectLayerMetadataSupport,
   getLayerSources,
@@ -13,41 +8,25 @@ import {
 } from "../index";
 
 const serviceUrl =
-  "https://data.wsdot.wa.gov/arcgis/rest/services/Shared/CountyBoundaries/MapServer";
+  "https://data.wsdot.wa.gov/arcgis/rest/services/Shared/CityLimits/MapServer";
 
 describe("metadataSoeUtils test suite", () => {
-  it("should be able to test for metadata SOE support", async done => {
-    try {
-      const supportsMetadata = await detectLayerMetadataSupport(serviceUrl);
-      expect(supportsMetadata).toEqual(true);
-      done();
-    } catch (error) {
-      done.fail(error);
-    }
+  it("should be able to test for metadata SOE support", async () => {
+    const supportsMetadata = await detectLayerMetadataSupport(serviceUrl);
+    expect(supportsMetadata).toEqual(true);
   });
 
-  it("should be able to get valid layers", async done => {
-    try {
-      const validLayers = await getValidLayers(serviceUrl);
-      expect(validLayers).toBeTruthy();
-      done();
-    } catch (error) {
-      done.fail(error);
-    }
+  it("should be able to get valid layers", async () => {
+    const validLayers = await getValidLayers(serviceUrl);
+    expect(validLayers).toBeTruthy();
   });
 
-  it("should be able to get metadata layer sources", async done => {
-    try {
+  it("should be able to get metadata layer sources", async () => {
       const layerSources = await getLayerSources(serviceUrl);
       expect(typeof layerSources).toBe("object");
-      done();
-    } catch (err) {
-      done.fail(err);
-    }
   });
 
-  it("should be able to get URLs for metadata (metadataLinks)", async done => {
-    try {
+  it("should be able to get URLs for metadata (metadataLinks)", async () => {
       const links = await getMetadataLinks(serviceUrl);
       expect(typeof links).toBe("object");
       for (const key in links) {
@@ -63,23 +42,14 @@ describe("metadataSoeUtils test suite", () => {
           ).toBeTruthy();
         }
       }
-      done();
-    } catch (error) {
-      done.fail(error);
-    }
   });
 
   describe("test against layers that don't support metadata SOE", () => {
-    it("Esri service will not support SOE", async done => {
+    it("Esri service will not support SOE", async () => {
       const esriUrl =
-        "http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer";
-      try {
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer";
         const supportsMetadata = await detectLayerMetadataSupport(esriUrl);
         expect(supportsMetadata).toBe(false);
-        done();
-      } catch (error) {
-        done.fail(error);
-      }
     });
   });
 });
