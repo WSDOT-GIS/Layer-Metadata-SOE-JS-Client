@@ -32,8 +32,8 @@
   "homepage": "https://github.com/WSDOT-GIS/Layer-Metadata-SOE-JS-Client#readme",
   "devDependencies": {
     "@types/jasmine": "^4.0.3",
-    "@types/node": "^17.0.41",
-    "jasmine": "^4.1.0",
+    "@types/node": "^17.0.42",
+    "jasmine": "^4.2.0",
     "prettier": "^2.6.2",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
