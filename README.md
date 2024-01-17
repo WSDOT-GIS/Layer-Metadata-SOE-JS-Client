@@ -1,3 +1,7 @@
+:warning: **This project is no longer active.** :warning:
+
+---
+
 Layer Metadata Server Object Extension JavaScript client
 ========================================================
 
